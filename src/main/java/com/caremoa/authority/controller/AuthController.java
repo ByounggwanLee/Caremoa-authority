@@ -54,8 +54,12 @@ public class AuthController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content) })
 	@PostMapping("/authenticate")
 	public ResponseEntity<TokenDto> authorize(
-			@Parameter(required = true, description = "아이디") @RequestParam String userId,
-			@Parameter(required = true, description = "패스워드") @RequestParam String password) {
+			@Parameter(required = true, description = "아이디") 
+			@Schema(description = "아이디", nullable = false, defaultValue = "lbg1225")
+			@RequestParam String userId,
+			@Parameter(required = true, description = "패스워드") 
+			@Schema(description = "패스워드", nullable = false, defaultValue = "string")
+			@RequestParam String password) {
 
 		log.info("Start");
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId,
@@ -82,7 +86,9 @@ public class AuthController {
 			@ApiResponse(responseCode = "404", description = "UserId not found", content = @Content) })
 	@GetMapping("/findUserId/{userId}")
 	public ResponseEntity<Boolean> findUserId(
-			@Parameter(required = true, description = "아이디") @PathVariable String userId) {
+			@Parameter(required = true, description = "아이디") 
+			@Schema(description = "아이디", nullable = false, defaultValue = "lbg1225")
+			@PathVariable String userId) {
 		if (memberFeign.findUserId(userId) != null) {
 			return new ResponseEntity<>(true, HttpStatus.OK);
 		} else {

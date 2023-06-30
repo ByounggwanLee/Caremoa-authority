@@ -19,18 +19,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 	private final PasswordEncoder passwordEncoder;
-	private final MemberFeign serviceController;
-	
+	private final MemberFeign memberFeign;
+
 	@Override
-    public UserDetails loadUserByUsername(final String username) {
-		LoginDto loginDto =  serviceController.findUserId(username);
-		
-		if(loginDto != null) {
-			 log.info(loginDto.toString());
-			 return new User(loginDto.getUserId(), passwordEncoder.encode(loginDto.getPassword()), AuthorityUtils.createAuthorityList(loginDto.getRole().split(",")));
-			// return new User("lbg","lbg111", AuthorityUtils.createAuthorityList("ADMIN", "MEMBER", "HELPER"));
-        } else {
-            throw new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다.");
-        }
-    } 
+	public UserDetails loadUserByUsername(final String username) {
+		LoginDto loginDto = memberFeign.findUserId(username);
+
+		if (loginDto != null) {
+			log.info(loginDto.toString());
+			return new User(loginDto.getUserId(), passwordEncoder.encode(loginDto.getPassword()),
+					AuthorityUtils.createAuthorityList(loginDto.getRole().split(",")));
+			// return new User("lbg","lbg111", AuthorityUtils.createAuthorityList("ADMIN",
+			// "MEMBER", "HELPER"));
+		} else {
+			throw new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다.");
+		}
+	}
 }
