@@ -119,4 +119,4 @@ server:
 #-------------------------------------------------------------        
 prop:
   member:
-    url: http://member:8081/member
+    url: http://member:8080/member
